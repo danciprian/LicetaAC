@@ -1,0 +1,251 @@
+<body>
+    <section>
+        <div class="text-center">
+            <h1>Panou de control</h3>
+        </div>
+
+        <div id="ctrl-panel" class="activities-grid">
+            <div class="activities-grid-item">
+                <a onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="my-btn"><i
+                        class="fa-solid fa-circle-plus"></i>&nbsp;Dispozitiv Nou</a>
+            </div>
+            <div class="activities-grid-item">
+                <a id="show-active-devices" class="my-btn">Dispozitive Active</a>
+            </div>
+            <div class="activities-grid-item">
+                <a id="show-readings-history" class="my-btn">Istoric Citiri</a>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <div id="active-devices" class="title-heading">
+            <h1>Lista dispozitive active</h3>
+                <div class="row">                    
+                    <div class="col">
+                        <button type="button" id="refresh-list" class="purple-btn"><i
+                                class="fas fa-sync-alt"></i>&nbsp;Refresh</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" id="read-data" class="purple-btn"><i
+                                class="fa fa-upload"></i>&nbsp;Citeste Date</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" id="delete-device" class="red-btn"><i
+                                class="fa fa-trash"></i>&nbsp;Sterge</button>
+                    </div>
+                </div>
+                <div class="text-center font-weight-bold text-info" id="info-msg"></div>
+                <div id="devices-list"></div>
+        </div>
+
+        <div id="readings-history" style="display: none;">
+            <div id="readings-list"></div>
+        </div>
+    </section>
+
+    <section>
+        <div id="id01" class="modal">
+            <span onclick="document.getElementById('id01').style.display='none'" class="close"
+                title="Close Modal">&times;</span>
+            <form class="modal-content" id="register-form">
+                <div class="container">
+                    <h1>Adaugare dispozitiv nou</h1>
+                    <hr>
+                    <fieldset class='float-label-field'>
+                        <label for="dname">Nume dispozitiv</label>
+                        <input name="dname" id="dname" type='text'>
+                    </fieldset>
+
+                    <fieldset class='float-label-field'>
+                        <label for="owner">Nume proprietar</label>
+                        <input name="owner" id="owner" type='text'>
+                    </fieldset>
+
+                    <fieldset class='float-label-field'>
+                        <label for="duid">Numar unic de identificare</label>
+                        <input name="duid" id="duid" type='text'>
+                    </fieldset>
+
+                    <fieldset class='float-label-field'>
+                        <label for="dlocation">Locatia Dispozitivului</label>
+                        <input name="dlocation" id="dlocation" type='text'>
+                    </fieldset>
+
+                    <div class="clearfix">
+                        <div class="text-justify font-weight-bold text-info" id="action-status"></div>
+                        <button type="button" id="newdevice_button" class="signupbtn">Adaugare Dispozitiv</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script/validation.min.js"></script>
+    <script type="text/javascript" src="script/mqtt.js"></script>
+
+    <script>
+        $('input').focus(function (event) {
+            $(this).closest('.float-label-field').addClass('float').addClass('focus');
+        })
+        $('input').blur(function () {
+            $(this).closest('.float-label-field').removeClass('focus');
+            if (!$(this).val()) {
+                $(this).closest('.float-label-field').removeClass('float');
+            }
+        });
+
+        $('#newdevice_button').click(function () {
+            var data = $('#register-form').serialize();
+            console.log(data);
+            $.ajax({
+                type: 'POST',
+                url: 'add_new_device.php',
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                    if (response == "ok") {
+                        document.getElementById("action-status").innerHTML = "Dispozitiv creat cu succes";
+                        document.getElementById("newdevice_button").classList.value = '';
+                        document.getElementById("newdevice_button").classList.add("grn-btn");
+                        table_set_data();
+                    } else {
+                        document.getElementById("action-status").innerHTML = response
+                        document.getElementById("newdevice_button").classList.value = '';
+                        document.getElementById("newdevice_button").classList.add("red-btn");
+                    }
+                }
+            });
+        })
+
+        $('#delete-device').click(function () {
+            deviceToDelete = table.getSelectedData()[0]['duid'];
+            data = { duid: deviceToDelete };
+
+            if (confirm(`Are you sure you want to delete the device ${deviceToDelete}`) == true) {
+                $.ajax({
+                    type: 'POST',
+                    url: `delete_device.php`,
+                    data: { duid: deviceToDelete },
+                    success: function (response) {
+                        if (response == "ok") {
+                            table_set_data();
+                        } else {
+                            console.log('failed');
+                        }
+                    }
+                });
+            }
+        });
+
+        var table = new Tabulator("#devices-list", {
+            height: "260px",
+            selectable: 1,                        //Allow to select the row by click it
+            layout: "fitColumns",                    //fit columns to width of table
+            responsiveLayout: "hide",                //hide columns that dont fit on the table
+            tooltips: true,                          //show tool tips on cells
+            addRowPos: "top",                        //when adding a new row, add it to the top of the table
+            history: true,                           //allow undo and redo actions on the table
+            pagination: "local",                     //paginate the data
+            paginationSize: 10,                      //allow 10 rows per page of data
+            movableColumns: true,                    //allow column order to be changed
+            resizableRows: true,                     //allow row order to be changed
+            placeholder: '<span class="text-center"><i style="font-size:100px;padding-bottom:10px" class="fa">&#xf119;</i><br>Nu s-au gasit dispozitive</span>',
+            columns: [
+                {
+                    title: "Nume",
+                    field: "dname"
+                },
+                {
+                    title: "Proprietar",
+                    field: "owner"
+                },
+                {
+                    title: "Locatie",
+                    field: "dlocation"
+                },
+                {
+                    title: "Serial Number",
+                    field: "duid"
+                },
+            ],
+        });
+
+        var tableReadings = new Tabulator("#readings-list", {
+            height: "260px",
+            selectable: 1,                        //Allow to select the row by click it
+            layout: "fitColumns",                    //fit columns to width of table
+            responsiveLayout: "hide",                //hide columns that dont fit on the table
+            tooltips: true,                          //show tool tips on cells
+            addRowPos: "top",                        //when adding a new row, add it to the top of the table
+            history: true,                           //allow undo and redo actions on the table
+            pagination: "local",                     //paginate the data
+            paginationSize: 10,                      //allow 10 rows per page of data
+            movableColumns: true,                    //allow column order to be changed
+            resizableRows: true,                     //allow row order to be changed
+            placeholder: '<span class="text-center"><i style="font-size:100px;padding-bottom:10px" class="fa">&#xf119;</i><br>Nu s-au gasit date</span>',
+            columns: [
+                {
+                    title: "Nume Dispozitiv",
+                    field: "dname"
+                },
+                {
+                    title: "Data si ora",
+                    field: "time_stamp"
+                },
+                {
+                    title: "Temperatura",
+                    field: "temp"
+                },
+                {
+                    title: "Presiune",
+                    field: "press"
+                },
+                {
+                    title: "umiditate",
+                    field: "hum"
+                },
+            ],
+        });
+
+        $("#refresh-list").click(function () {
+            table_set_data();
+        });
+
+        function table_set_data() {
+            table.setData("get_all_devices.php");
+        }
+
+        function table_set_history_data() {
+            tableReadings.setData("get_devices_log.php")
+        }
+        
+
+        table_set_data();
+
+        $('#show-readings-history').click(function () {
+            table_set_history_data()
+            document.getElementById('active-devices').style.display = "none";
+            document.getElementById('readings-history').style.display = "block";
+        });
+
+        $('#show-active-devices').click(function () {
+            document.getElementById('readings-history').style.display = "none";
+            document.getElementById('active-devices').style.display = "block";
+        });
+
+        $('#read-data').click(function() {
+            var selectedData = table.getSelectedData();
+
+            if(selectedData.length == 0) {
+                document.getElementById("info-msg").innerHTML = "Selecteaza un dispozitiv prima data";
+                return;
+            }
+            get_data_from_device(selectedData[0]['duid']);
+        });
+    </script>
+
+</body>
