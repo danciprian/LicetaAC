@@ -461,6 +461,16 @@ a:hover {
     font-size: 15px;
 }
 
+#ctrl-panel .fa-desktop{
+    color: white;
+    font-size: 15px;
+}
+
+#ctrl-panel .fa-history{
+    color: white;
+    font-size: 15px;
+}
+
 /* Modal style adn register form within it */
 
 #register-form .float-label-field {

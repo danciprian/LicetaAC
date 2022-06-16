@@ -1,13 +1,15 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Data Colector</title>
     <!-- MQTT CDN-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
+        type="text/javascript"></script>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
     <!-- Tabulator -->
@@ -31,28 +33,28 @@
         <section class="hero">
             <div class="container">
                 <div class="main-message">
-                    <h3>Data Colector Application</h3>
+                    <h3>Aplicatie Colectoare de Date</h3>
                     <p>Aceasta aplicatie ofera utilizatorului posibilitatea de a crea si accesa dispozitive
                         de monitorizare a diversi parametrii de mediu, complet remote, la orice ora
-                        cu raspuns imediat.
+                        cu raspuns imediat. 
                     </p>
-                    <div class="cta">
-                        <a href="" class="my-btn">Mai multe detalii</a>
-                    </div>
                 </div>
             </div>
         </section>
-        <div id="content-panel" class="container"></div>       
+        <div id="content-panel" class="container"></div>
     </main>
 
+    <div id="info-modal" class="modal"></div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="script/tabulator/js/tabulator.min.js"></script>
     <script type="text/javascript" src="scripts.js"></script>
     <script>
-        $("#content-panel").load("home.html");
+        $("#content-panel").load("home.html");        
     </script>
 </body>
+
 </html>

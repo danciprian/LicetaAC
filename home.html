@@ -3,37 +3,87 @@
         <div class="title-heading">
             <h1>Afla mai multe detalii despre functionalitatile de baza ale aplicatiei accesand
                 meniurile de mai jos
-            </h3>
-            <!-- <p>Chose one of the topics below to get more information about how the application is working</p> -->
+                </h3>
+                <!-- <p>Chose one of the topics below to get more information about how the application is working</p> -->
         </div>
 
         <div class="activities-grid">
             <div class="activities-grid-item collector-device">
                 <i class="fa-solid fa-microchip"></i>
                 <h1>Dispozitiv Colector de Date</h1>
-                <p>Dispozitivul contine un microcontroller aduna date in timp real 
+                <p>Dispozitivul contine un microcontroller aduna date in timp real
                     din locatia in care se afla.
                 </p>
 
-                <a href="" class="my-btn">Detalii</a>
+                <a id="device-details" class="my-btn">Detalii</a>
             </div>
             <div class="activities-grid-item device-protocol">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <h1>Protocol de comunicare</h1>
-                <p>Dispozitivul foloseste ca protocol MQTT, unul dintre cele mai rapandite
-                    standarte in IoT.
+                <p>Dispozitivul foloseste MQTT ca protocol de comunicare cu aplciatia WEB, unul dintre cele mai rapandite
+                    standarte in internet of Things (IoT).
                 </p>
-                
-                <a href="" class="my-btn">Detalii</a>
+
+                <a id="mqtt-details" class="my-btn">Detalii</a>
             </div>
             <div class="activities-grid-item sensors">
                 <i class="fa-solid fa-house-signal"></i>
                 <h1>Senzorii folositi</h1>
-                <p>Dispozitivul foloseste diversi senzori pentru a aduna date de mediu in 
-                    timp real (temperatura, presiune, umiditate, CO2)</p>
+                <p>Dispozitivul foloseste diversi senzori pentru a aduna date de mediu in
+                    timp real (temperatura, presiune, umiditate)</p>
 
-                <a href="" class="my-btn">Detalii</a>
+                <a id="sensor-details" class="my-btn">Detalii</a>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    $('#device-details').click(function () {
+        content = 
+        '<p>Hardware-ul este format dintr-un microcontroller ESP32 ce sta conectat in permanenta la'+
+            'Wi-Fi si un senzor BME280 care prin inetermediul I2C furnizeaza temperatura, presiunea si'+
+            'umiditatea catre ESP32. Avantajele ESp32 sunt ca are Wi-Fi si Bluetooth integrate direct, foarte usor de folosit</p>'+
+        '<p>Figura de mai jos ilustreaza controllerul ESP32</p>'+
+        '<div class="text-center"><img src="images/esp32-board.PNG" class="img-fluid"></div>'+
+        '<p>Senzorul BME280 poate comunica pe SPI si I2C, dar pentru acest proiect a fost ales I2C</p>'+
+        '<p>Figura de mai jos ilustreaza senzorul BME280</p>'+
+        '<div class="text-center"><img src="images/bme280.PNG" class="img-fluid"></div>'
+        display_info_modal("Dispozitiv colector de date", content);
+    });
+
+    $('#mqtt-details').click(function() {
+        content = 
+        '<p>MQTT este printre cele mai folosite protocoale de comunicare in IoT, modul sau de functionare fiind'+
+            'unul client-broker</p>'+
+        '<p>Brokerul este configurat pe un raspberry PI, brokerul folosit este mosquitto de la eclipse.</p>'+
+        '<div class="text-center"><img src="images/rpimqtt.PNG" class="img-fluid"></div>'+
+        '<p>Principiul de client-broker functioneaza in felul urmator:</p>'+
+        '<p>-Brokerul cunoaste toate topicurile la care clientii se aboneaza</p>'+
+        '<p>-Daca un client posteaza intr-un topic automat toti clientii abonati primesc acel mesaj</p>'+
+        '<div class="text-center"><img src="images/mqtt.PNG" class="img-fluid"></div>'
+        display_info_modal("Protocol de comunicare", content);
+    });
+
+    $('#sensor-details').click(function () {
+        content = 
+        '<p>Senzorul folosit este BME280, fabricat de firma bosch.</p>'+
+        '<p>Senzorul poate furniza date de temperatura, presiune si umiditate cu o precizie foarte buna.</p>'+
+        '<p>Senzorul poate sa fie accesat prin magistrala I2C sau SPI, in cazul acestui proiect afost folosit I2C.</p>'+
+        '<p>Pentru a obtine citiri cat mai precise a fost aplicata formula de compensare din datasheet-ul senzorului.</p>'+
+        '<p>Figura de mai jos ilustreaza senzorul BME280</p>'+
+        '<div class="text-center"><img src="images/bme280.PNG" class="img-fluid"></div>'
+        display_info_modal("Senzori folositi", content);
+    });
+
+    function display_info_modal(title, content) {
+        document.getElementById('info-modal').innerHTML = 
+        '<span onclick="document.getElementById(\'info-modal\').style.display=\'none\'" class="close"title="Close Modal">&times;</span>'+
+        '<div class="container modal-content">'+
+            `<h1>${title}</h1>`+
+            `<span>${content}</span>`+
+        '</div>'
+
+        document.getElementById('info-modal').style.display = "block";
+    }
+</script>

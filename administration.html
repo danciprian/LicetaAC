@@ -10,10 +10,10 @@
                         class="fa-solid fa-circle-plus"></i>&nbsp;Dispozitiv Nou</a>
             </div>
             <div class="activities-grid-item">
-                <a id="show-active-devices" class="my-btn">Dispozitive Active</a>
+                <a id="show-active-devices" class="my-btn"><i class="fa fa-desktop"></i>&nbsp;Dispozitive Active</a>
             </div>
             <div class="activities-grid-item">
-                <a id="show-readings-history" class="my-btn">Istoric Citiri</a>
+                <a id="show-readings-history" class="my-btn"><i class="fa fa-history"></i>&nbsp;Istoric Citiri</a>
             </div>
 
         </div>
@@ -238,6 +238,7 @@
         });
 
         $('#read-data').click(function() {
+            document.getElementById("info-msg").innerHTML = "";
             var selectedData = table.getSelectedData();
 
             if(selectedData.length == 0) {
