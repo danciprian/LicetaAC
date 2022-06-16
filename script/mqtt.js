@@ -132,6 +132,7 @@ function check_received_response(res) {
         });        
     } else {
         $("#read-data").html('<i class="fa fa-times"></i>&nbsp;Reincearca');
+        document.getElementById("info-msg").innerHTML = "Eroare la citirea datelor";
     }
 }
 
