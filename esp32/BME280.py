@@ -249,7 +249,7 @@ class BME280Sensor:
   
   def read_temperature_celsius_degrees(self):
     """
-      Aceasta metoda returneaza temperatura calculata cu compensare in hecto pascali
+      Aceasta metoda returneaza temperatura calculata cu compensare in grade celsius
     """
     t = self.read_temperature_compensated()
     ti = t // 100
@@ -277,4 +277,3 @@ class BME280Sensor:
     return "{}.{:02d}%".format(hi, hd)
 
   
-
